@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Inter & Plus Jakarta Sans) -->
+    <!-- Google Fonts (Plus Jakarta Sans) -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- HTML5 QRCode Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -47,7 +47,6 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -62,7 +61,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        /* KTP ID Card Exact Standard Aspect Ratio */
         .ktp-card {
             width: 85.6mm;
             height: 54mm;
@@ -86,14 +84,20 @@
                 </div>
                 <div>
                     <h1 id="appTitleText" class="font-extrabold text-lg text-slate-800 tracking-tight leading-tight">E-Absensi Digital QR</h1>
-                    <p class="text-xs text-slate-500 font-medium" id="subTitleHeader">Sistem Absensi Pintar & Presisi</p>
+                    <p class="text-xs text-slate-500 font-medium" id="subTitleHeader">Sistem Absensi Pintar Multi-Tenant Cloud</p>
                 </div>
             </div>
 
             <div class="flex items-center space-x-3">
+                <!-- Cloud Sync Status Indicator -->
+                <div id="cloudStatusBadge" class="flex items-center bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-semibold space-x-2 border border-emerald-200">
+                    <span id="cloudPulse" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="cloudStatusText">Cloud Online</span>
+                </div>
+
                 <!-- User Profile & Role Info -->
                 <div id="userInfoBadge" class="hidden flex items-center bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold space-x-2 border border-slate-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full bg-brand-500"></span>
                     <span id="userRoleName">Mode: Sekolah/Kelas</span>
                 </div>
 
@@ -110,7 +114,6 @@
         <!-- ==================== LOGIN VIEW ==================== -->
         <div id="loginView" class="max-w-md mx-auto my-8">
             <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 relative overflow-hidden">
-                <!-- Decorative top bar -->
                 <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500"></div>
 
                 <div class="text-center mb-8">
@@ -172,13 +175,12 @@
 
         <!-- ==================== ADMIN DASHBOARD ==================== -->
         <div id="adminDashboardView" class="hidden space-y-6">
-            <!-- Admin Banner -->
             <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <span class="bg-indigo-500/20 text-indigo-300 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/30">Panel Administrator Utama</span>
                         <h2 class="text-2xl font-black mt-2">Kelola Akun Sekolah & Branding Aplikasi</h2>
-                        <p class="text-slate-300 text-xs mt-1">Atur nama aplikasi, logo, dan buat akun untuk setiap kelas/sekolah.</p>
+                        <p class="text-slate-300 text-xs mt-1">Atur nama aplikasi, logo, dan buat akun terisolasi untuk setiap kelas/sekolah.</p>
                     </div>
                     <button onclick="openModalCreateSchool()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2.5 rounded-xl font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-brand-500/40 shrink-0">
                         <i class="fa-solid fa-plus"></i>
@@ -227,7 +229,7 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-slate-800 text-sm">Daftar Akun Kelas / Sekolah</h3>
-                                <p class="text-xs text-slate-400">Kelola kredensial akses pengguna</p>
+                                <p class="text-xs text-slate-400">Kelola kredensial akses pengguna & jumlah siswa</p>
                             </div>
                         </div>
                     </div>
@@ -239,6 +241,7 @@
                                     <th class="py-3 px-4 rounded-l-xl">Nama Sekolah / Kelas</th>
                                     <th class="py-3 px-4">Username</th>
                                     <th class="py-3 px-4">Password</th>
+                                    <th class="py-3 px-4 text-center">Jumlah Siswa</th>
                                     <th class="py-3 px-4 text-right rounded-r-xl">Aksi</th>
                                 </tr>
                             </thead>
@@ -293,7 +296,7 @@
                             </div>
                         </div>
 
-                        <!-- Mode Switcher: Camera vs Hardware Scanner -->
+                        <!-- Mode Switcher -->
                         <div class="grid grid-cols-2 gap-3 bg-slate-50 p-1.5 rounded-2xl border border-slate-200">
                             <button id="scannerModeCameraBtn" onclick="setScannerMode('camera')" class="py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm">
                                 <i class="fa-solid fa-camera"></i>
@@ -309,7 +312,7 @@
                         <div id="cameraBox" class="relative bg-slate-950 rounded-2xl overflow-hidden min-h-[300px] flex items-center justify-center border border-slate-800 shadow-inner">
                             <div id="reader" class="w-full h-full max-w-md"></div>
                             
-                            <!-- Camera Permission/Active Overlay -->
+                            <!-- Camera Permission Overlay -->
                             <div id="cameraOverlay" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 space-y-4 z-10">
                                 <div class="w-16 h-16 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-2xl animate-bounce">
                                     <i class="fa-solid fa-camera-rotate"></i>
@@ -340,7 +343,7 @@
                             </div>
                         </div>
 
-                        <!-- Action Controls (Camera Switch, Enable/Disable Camera Toggle) -->
+                        <!-- Action Controls -->
                         <div id="cameraControls" class="flex flex-wrap items-center justify-between gap-3 pt-2">
                             <div class="flex items-center space-x-2">
                                 <button onclick="toggleCameraPower()" id="toggleCamPowerBtn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-2">
@@ -366,7 +369,7 @@
                             <div id="scanResultPlaceholder" class="py-12 text-center text-slate-400 space-y-2">
                                 <i class="fa-solid fa-qrcode text-4xl text-slate-300"></i>
                                 <p class="text-xs font-semibold">Belum ada scan diproses</p>
-                                <p class="text-[11px] text-slate-400">Silakan scan QR Code kartu siswa</p>
+                                <p class="text-[11px] text-slate-400">Silakan scan QR Code kartu siswa kelas ini</p>
                             </div>
 
                             <div id="scanResultDetail" class="hidden space-y-4 pt-3">
@@ -426,7 +429,7 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                         <div>
                             <h3 class="font-bold text-slate-800 text-lg">Kelola Data Siswa & Kartu Barcode</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Tambah manual atau import sekaligus via Excel format untuk dicetak menjadi Kartu KTP Digital PDF.</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Siswa khusus terdaftar untuk akun sekolah / kelas ini saja.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
                             <button onclick="downloadExcelTemplate()" class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs rounded-xl transition flex items-center gap-1.5">
@@ -534,7 +537,7 @@
                         </div>
                     </div>
 
-                    <!-- Recap Data Table (Ordered by No Urut Import) -->
+                    <!-- Recap Data Table -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -556,7 +559,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: SETTINGS (JAM ABSEN & CONNECT SCANNER) -->
+            <!-- TAB 4: SETTINGS -->
             <div id="tabContentSettings" class="hidden space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -726,9 +729,8 @@
                 </button>
             </div>
 
-            <!-- Preview Container for html2pdf -->
             <div id="cardPrintArea" class="flex flex-col items-center justify-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-200">
-                <!-- Cards will be dynamically inserted here -->
+                <!-- Cards dynamically inserted here -->
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-2">
@@ -749,17 +751,42 @@
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT APP LOGIC ==================== -->
-    <script>
-        // HARDCODED ADMIN PASSWORD (NOT DISPLAYED IN PUBLIC UI)
+    <!-- ==================== FIREBASE & JAVASCRIPT LOGIC ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Secret password for admin access
         const ADMIN_SECRET_PASS = "050393";
 
-        // Global Reactive App State
-        let appState = {
+        // Initialize Firebase
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'e-absensi-default-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDemoKeyHere",
+            authDomain: "e-absensi.firebaseapp.com",
+            projectId: "e-absensi-app",
+            storageBucket: "e-absensi.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Firestore public path constants
+        const colSchoolAccountsRef = collection(db, 'artifacts', appId, 'public', 'data', 'school_accounts');
+        const colStudentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'students');
+        const colAttendanceRef = collection(db, 'artifacts', appId, 'public', 'data', 'attendance_records');
+        const docSettingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'app_settings', 'global');
+
+        // Global Application State
+        window.appState = {
             appName: localStorage.getItem('app_name') || "E-Absensi Digital QR",
             appLogo: localStorage.getItem('app_logo') || "",
             currentUserRole: null, // 'admin' | 'class'
-            currentClassAccount: null,
+            currentClassAccount: null, // logged-in school/class object
             schoolAccounts: JSON.parse(localStorage.getItem('school_accounts') || '[]'),
             students: JSON.parse(localStorage.getItem('students') || '[]'),
             attendanceRecords: JSON.parse(localStorage.getItem('attendance_records') || '[]'),
@@ -770,299 +797,389 @@
                 spreadsheetLink: "https://docs.google.com",
                 externalScanner: true
             })),
-            activeScannerMode: 'camera', // 'camera' | 'hardware'
-            recapFilter: 'daily', // 'daily' | 'weekly' | 'monthly'
-            cameraActive: false,
-            html5QrCode: null
+            recapFilter: 'daily',
+            scannerMode: 'camera',
+            activeCameraFacing: 'environment'
         };
 
-        // Initialize default demo data if empty
-        if (appState.schoolAccounts.length === 0) {
-            appState.schoolAccounts = [
-                { id: 'sch_1', name: 'SMA Negeri 1 Utama', username: 'kelas10a', password: '123' }
-            ];
-            saveSchoolAccounts();
-        }
+        let html5QrcodeScanner = null;
+        let isCameraActive = false;
+        let isCloudConnected = false;
 
-        if (appState.students.length === 0) {
-            appState.students = [
-                { id: 'std_1', nisn: '0051234567', name: 'Ahmad Fauzi', gender: 'L', studentClass: 'X IPA 1', orderNo: 1, photo: '' },
-                { id: 'std_2', nisn: '0057654321', name: 'Siti Rahmawati', gender: 'P', studentClass: 'X IPA 1', orderNo: 2, photo: '' }
-            ];
-            saveStudents();
-        }
+        // Firebase Initialization & Realtime Synchronization
+        async function initCloudSync() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                isCloudConnected = true;
+                updateCloudBadge(true);
 
-        window.onload = function() {
-            updateBrandingUI();
-            setupHardwareScannerListener();
-        };
+                // Listen to Cloud Collections
+                onSnapshot(colSchoolAccountsRef, (snapshot) => {
+                    window.appState.schoolAccounts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    localStorage.setItem('school_accounts', JSON.stringify(window.appState.schoolAccounts));
+                    if (window.appState.currentUserRole === 'admin') window.renderSchoolAccountsList();
+                }, (err) => console.warn('School Accounts Sync:', err));
 
-        function saveSchoolAccounts() {
-            localStorage.setItem('school_accounts', JSON.stringify(appState.schoolAccounts));
-        }
+                onSnapshot(colStudentsRef, (snapshot) => {
+                    window.appState.students = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    localStorage.setItem('students', JSON.stringify(window.appState.students));
+                    if (window.appState.currentUserRole === 'class') window.renderStudentList();
+                    if (window.appState.currentUserRole === 'admin') window.renderSchoolAccountsList();
+                }, (err) => console.warn('Students Sync:', err));
 
-        function saveStudents() {
-            localStorage.setItem('students', JSON.stringify(appState.students));
-        }
+                onSnapshot(colAttendanceRef, (snapshot) => {
+                    window.appState.attendanceRecords = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    localStorage.setItem('attendance_records', JSON.stringify(window.appState.attendanceRecords));
+                    if (window.appState.currentUserRole === 'class') {
+                        window.renderRecapList();
+                        window.updateTodaySummary();
+                    }
+                }, (err) => console.warn('Attendance Sync:', err));
 
-        function saveAttendanceRecords() {
-            localStorage.setItem('attendance_records', JSON.stringify(appState.attendanceRecords));
-        }
+                onSnapshot(docSettingsRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        window.appState.settings = docSnap.data();
+                        localStorage.setItem('app_settings', JSON.stringify(window.appState.settings));
+                        window.loadSettingsToForm();
+                    }
+                }, (err) => console.warn('Settings Sync:', err));
 
-        function saveSettings() {
-            localStorage.setItem('app_settings', JSON.stringify(appState.settings));
-        }
-
-        function updateBrandingUI() {
-            document.getElementById('appTitleText').innerText = appState.appName;
-            const logoImg = document.getElementById('appLogoImg');
-            const logoIcon = document.getElementById('appLogoIcon');
-
-            if (appState.appLogo) {
-                logoImg.src = appState.appLogo;
-                logoImg.classList.remove('hidden');
-                logoIcon.classList.add('hidden');
-            } else {
-                logoImg.classList.add('hidden');
-                logoIcon.classList.remove('hidden');
+            } catch (err) {
+                console.warn('Firebase connection offline, fallback to local state:', err);
+                updateCloudBadge(false);
             }
-
-            document.getElementById('settingAppName').value = appState.appName;
-            document.getElementById('settingInTime').value = appState.settings.inTime;
-            document.getElementById('settingLateTime').value = appState.settings.lateTime;
-            document.getElementById('settingOutTime').value = appState.settings.outTime;
-            document.getElementById('settingSpreadsheetLink').value = appState.settings.spreadsheetLink || '';
-            document.getElementById('settingExternalScannerToggle').checked = appState.settings.externalScanner;
         }
 
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const msg = document.getElementById('toastMessage');
-            const icon = document.getElementById('toastIcon');
-
-            msg.innerText = message;
-            if (type === 'success') {
-                icon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+        function updateCloudBadge(online) {
+            const badge = document.getElementById('cloudStatusBadge');
+            const pulse = document.getElementById('cloudPulse');
+            const text = document.getElementById('cloudStatusText');
+            if (online) {
+                badge.className = "flex items-center bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-semibold space-x-2 border border-emerald-200";
+                pulse.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                text.textContent = "Cloud Sync Online";
             } else {
-                icon.className = "fa-solid fa-triangle-exclamation text-rose-400 text-base";
+                badge.className = "flex items-center bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-semibold space-x-2 border border-amber-200";
+                pulse.className = "w-2 h-2 rounded-full bg-amber-500";
+                text.textContent = "Offline Mode";
             }
-
-            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 3000);
         }
 
-        function switchLoginTab(tab) {
+        // --- Helper Cloud Mutation Functions ---
+        async function cloudSaveSchoolAccount(account) {
+            if (isCloudConnected && account.id) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'school_accounts', account.id), account);
+            }
+        }
+
+        async function cloudDeleteSchoolAccount(accountId) {
+            if (isCloudConnected && accountId) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'school_accounts', accountId));
+            }
+        }
+
+        async function cloudSaveStudent(student) {
+            if (isCloudConnected && student.id) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', student.id), student);
+            }
+        }
+
+        async function cloudDeleteStudent(studentId) {
+            if (isCloudConnected && studentId) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students', studentId));
+            }
+        }
+
+        async function cloudSaveAttendance(record) {
+            if (isCloudConnected && record.id) {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance_records', record.id), record);
+            }
+        }
+
+        async function cloudSaveSettings(settings) {
+            if (isCloudConnected) {
+                await setDoc(docSettingsRef, settings);
+            }
+        }
+
+        // UI & Navigation Handlers
+        window.switchLoginTab = function(type) {
+            const classBtn = document.getElementById('tabLoginClassBtn');
+            const adminBtn = document.getElementById('tabLoginAdminBtn');
             const classForm = document.getElementById('classLoginForm');
             const adminForm = document.getElementById('adminLoginForm');
-            const tabClass = document.getElementById('tabLoginClassBtn');
-            const tabAdmin = document.getElementById('tabLoginAdminBtn');
 
-            if (tab === 'class') {
+            if (type === 'class') {
+                classBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-800 bg-white shadow-sm";
+                adminBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800";
                 classForm.classList.remove('hidden');
                 adminForm.classList.add('hidden');
-                tabClass.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-800 bg-white shadow-sm";
-                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800";
             } else {
-                classForm.classList.add('hidden');
+                adminBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-800 bg-white shadow-sm";
+                classBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800";
                 adminForm.classList.remove('hidden');
-                tabAdmin.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-800 bg-white shadow-sm";
-                tabClass.className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800";
+                classForm.classList.add('hidden');
             }
-        }
+        };
 
-        function handleClassLogin(e) {
+        window.handleClassLogin = function(e) {
             e.preventDefault();
-            const userVal = document.getElementById('classUsernameInput').value.trim();
-            const passVal = document.getElementById('classPasswordInput').value.trim();
+            const username = document.getElementById('classUsernameInput').value.trim();
+            const password = document.getElementById('classPasswordInput').value.trim();
 
-            const foundAccount = appState.schoolAccounts.find(acc => acc.username === userVal && acc.password === passVal);
+            const account = window.appState.schoolAccounts.find(a => a.username.toLowerCase() === username.toLowerCase() && a.password === password);
 
-            if (foundAccount) {
-                appState.currentUserRole = 'class';
-                appState.currentClassAccount = foundAccount;
-                
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('classDashboardView').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('userInfoBadge').classList.remove('hidden');
-                document.getElementById('userRoleName').innerText = `Kelas: ${foundAccount.name}`;
-
-                showToast(`Selamat Datang, ${foundAccount.name}`);
-                switchClassTab('scan');
-                renderStudentList();
-                renderRecapTable();
+            if (account) {
+                window.appState.currentUserRole = 'class';
+                window.appState.currentClassAccount = account;
+                showToast(`Selamat Datang, ${account.name}`, 'success');
+                renderAppViews();
             } else {
-                showToast("Username atau Password Kelas salah!", "error");
+                showToast("Username atau Password Kelas/Sekolah Salah!", "error");
             }
-        }
+        };
 
-        function handleAdminLogin(e) {
+        window.handleAdminLogin = function(e) {
             e.preventDefault();
-            const passVal = document.getElementById('adminPasswordInput').value.trim();
-
-            if (passVal === ADMIN_SECRET_PASS) {
-                appState.currentUserRole = 'admin';
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('adminDashboardView').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('userInfoBadge').classList.remove('hidden');
-                document.getElementById('userRoleName').innerText = "Administrator";
-
-                showToast("Berhasil Masuk Mode Admin");
-                renderSchoolAccountTable();
+            const pass = document.getElementById('adminPasswordInput').value.trim();
+            if (pass === ADMIN_SECRET_PASS) {
+                window.appState.currentUserRole = 'admin';
+                window.appState.currentClassAccount = null;
+                showToast("Berhasil Masuk sebagai Administrator!", "success");
+                renderAppViews();
             } else {
                 showToast("Password Administrator Salah!", "error");
             }
+        };
+
+        window.handleLogout = function() {
+            window.stopCameraScanner();
+            window.appState.currentUserRole = null;
+            window.appState.currentClassAccount = null;
+            document.getElementById('classLoginForm').reset();
+            document.getElementById('adminLoginForm').reset();
+            showToast("Anda telah keluar dari akun.", "info");
+            renderAppViews();
+        };
+
+        function renderAppViews() {
+            const loginView = document.getElementById('loginView');
+            const adminDashboardView = document.getElementById('adminDashboardView');
+            const classDashboardView = document.getElementById('classDashboardView');
+            const userInfoBadge = document.getElementById('userInfoBadge');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userRoleName = document.getElementById('userRoleName');
+
+            // Apply branding logo & name
+            document.getElementById('appTitleText').textContent = window.appState.appName;
+            if (window.appState.appLogo) {
+                document.getElementById('appLogoImg').src = window.appState.appLogo;
+                document.getElementById('appLogoImg').classList.remove('hidden');
+                document.getElementById('appLogoIcon').classList.add('hidden');
+            } else {
+                document.getElementById('appLogoImg').classList.add('hidden');
+                document.getElementById('appLogoIcon').classList.remove('hidden');
+            }
+
+            if (!window.appState.currentUserRole) {
+                loginView.classList.remove('hidden');
+                adminDashboardView.classList.add('hidden');
+                classDashboardView.classList.add('hidden');
+                userInfoBadge.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+            } else if (window.appState.currentUserRole === 'admin') {
+                loginView.classList.add('hidden');
+                adminDashboardView.classList.remove('hidden');
+                classDashboardView.classList.add('hidden');
+                userInfoBadge.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+                userRoleName.textContent = "Mode: Administrator";
+
+                window.renderSchoolAccountsList();
+                document.getElementById('settingAppName').value = window.appState.appName;
+            } else if (window.appState.currentUserRole === 'class') {
+                loginView.classList.add('hidden');
+                adminDashboardView.classList.add('hidden');
+                classDashboardView.classList.remove('hidden');
+                userInfoBadge.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+                userRoleName.textContent = `Akun: ${window.appState.currentClassAccount.name}`;
+
+                window.switchClassTab('scan');
+                window.loadSettingsToForm();
+            }
         }
 
-        function handleLogout() {
-            stopCameraScanner();
-            appState.currentUserRole = null;
-            appState.currentClassAccount = null;
-
-            document.getElementById('loginView').classList.remove('hidden');
-            document.getElementById('adminDashboardView').classList.add('hidden');
-            document.getElementById('classDashboardView').classList.add('hidden');
-            document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('userInfoBadge').classList.add('hidden');
-
-            document.getElementById('classUsernameInput').value = '';
-            document.getElementById('classPasswordInput').value = '';
-            document.getElementById('adminPasswordInput').value = '';
-
-            showToast("Telah Berhasil Keluar");
-        }
-
-        function renderSchoolAccountTable() {
+        // --- ADMIN MANAGEMENT FUNCTIONS ---
+        window.renderSchoolAccountsList = function() {
             const tbody = document.getElementById('schoolAccountTableBody');
             tbody.innerHTML = '';
 
-            if (appState.schoolAccounts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400 font-medium">Belum ada akun sekolah dibuat.</td></tr>`;
+            if (window.appState.schoolAccounts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Belum ada akun sekolah/kelas. Klik "Tambah Akun Kelas Baru".</td></tr>`;
                 return;
             }
 
-            appState.schoolAccounts.forEach((acc) => {
+            window.appState.schoolAccounts.forEach((acc) => {
+                // Multi-tenant student count for this account
+                const count = window.appState.students.filter(s => s.schoolAccountId === acc.id).length;
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 transition";
+                tr.className = "hover:bg-slate-50/50 transition";
                 tr.innerHTML = `
                     <td class="py-3 px-4 font-bold text-slate-800">${acc.name}</td>
                     <td class="py-3 px-4 font-mono text-slate-600">${acc.username}</td>
-                    <td class="py-3 px-4 font-mono text-slate-600">•••••••• (${acc.password})</td>
-                    <td class="py-3 px-4 text-right space-x-2">
-                        <button onclick="editSchoolAccount('${acc.id}')" class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteSchoolAccount('${acc.id}')" class="p-1.5 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 font-bold"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="py-3 px-4 font-mono text-slate-500">• • • • • •</td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-600 border border-indigo-100">${count} Siswa</span>
+                    </td>
+                    <td class="py-3 px-4 text-right space-x-1">
+                        <button onclick="editSchoolAccount('${acc.id}')" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100"><i class="fa-solid fa-pen text-xs"></i></button>
+                        <button onclick="deleteSchoolAccount('${acc.id}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"><i class="fa-solid fa-trash text-xs"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
-        function openModalCreateSchool() {
-            document.getElementById('schoolEditId').value = '';
-            document.getElementById('schoolNameInput').value = '';
-            document.getElementById('schoolUsernameInput').value = '';
-            document.getElementById('schoolPasswordInput').value = '';
-            document.getElementById('schoolModalTitle').innerText = 'Buat Akun Kelas Baru';
+        window.openModalCreateSchool = function() {
+            document.getElementById('schoolModalTitle').textContent = "Buat Akun Kelas Baru";
+            document.getElementById('schoolEditId').value = "";
+            document.getElementById('schoolNameInput').value = "";
+            document.getElementById('schoolUsernameInput').value = "";
+            document.getElementById('schoolPasswordInput').value = "";
             document.getElementById('schoolModal').classList.remove('hidden');
-        }
+        };
 
-        function closeSchoolModal() {
+        window.closeSchoolModal = function() {
             document.getElementById('schoolModal').classList.add('hidden');
-        }
+        };
 
-        function handleSaveSchoolAccount(e) {
+        window.handleSaveSchoolAccount = async function(e) {
             e.preventDefault();
-            const id = document.getElementById('schoolEditId').value;
+            const id = document.getElementById('schoolEditId').value || 'sch_' + Date.now();
             const name = document.getElementById('schoolNameInput').value.trim();
             const username = document.getElementById('schoolUsernameInput').value.trim();
             const password = document.getElementById('schoolPasswordInput').value.trim();
 
-            if (id) {
-                const idx = appState.schoolAccounts.findIndex(a => a.id === id);
-                if (idx !== -1) {
-                    appState.schoolAccounts[idx] = { id, name, username, password };
-                }
+            const existingIndex = window.appState.schoolAccounts.findIndex(a => a.id === id);
+            const newAccount = { id, name, username, password, createdAt: new Date().toISOString() };
+
+            if (existingIndex > -1) {
+                window.appState.schoolAccounts[existingIndex] = newAccount;
             } else {
-                appState.schoolAccounts.push({
-                    id: 'sch_' + Date.now(),
-                    name, username, password
-                });
+                // Check username duplicate
+                if (window.appState.schoolAccounts.some(a => a.username.toLowerCase() === username.toLowerCase())) {
+                    showToast("Username sudah digunakan akun lain!", "error");
+                    return;
+                }
+                window.appState.schoolAccounts.push(newAccount);
             }
 
-            saveSchoolAccounts();
-            renderSchoolAccountTable();
-            closeSchoolModal();
-            showToast("Akun Sekolah/Kelas Berhasil Disimpan");
-        }
+            localStorage.setItem('school_accounts', JSON.stringify(window.appState.schoolAccounts));
+            await cloudSaveSchoolAccount(newAccount);
 
-        function editSchoolAccount(id) {
-            const acc = appState.schoolAccounts.find(a => a.id === id);
+            window.closeSchoolModal();
+            window.renderSchoolAccountsList();
+            showToast("Akun Sekolah/Kelas Berhasil Disimpan!", "success");
+        };
+
+        window.editSchoolAccount = function(id) {
+            const acc = window.appState.schoolAccounts.find(a => a.id === id);
             if (!acc) return;
-
+            document.getElementById('schoolModalTitle').textContent = "Edit Akun Kelas";
             document.getElementById('schoolEditId').value = acc.id;
             document.getElementById('schoolNameInput').value = acc.name;
             document.getElementById('schoolUsernameInput').value = acc.username;
             document.getElementById('schoolPasswordInput').value = acc.password;
-            document.getElementById('schoolModalTitle').innerText = 'Edit Akun Kelas';
             document.getElementById('schoolModal').classList.remove('hidden');
-        }
+        };
 
-        function deleteSchoolAccount(id) {
-            appState.schoolAccounts = appState.schoolAccounts.filter(a => a.id !== id);
-            saveSchoolAccounts();
-            renderSchoolAccountTable();
-            showToast("Akun berhasil dihapus");
-        }
+        window.deleteSchoolAccount = async function(id) {
+            if (!confirm("Apakah anda yakin ingin menghapus akun ini? Data siswa terkait juga akan dihapus.")) return;
+            window.appState.schoolAccounts = window.appState.schoolAccounts.filter(a => a.id !== id);
+            localStorage.setItem('school_accounts', JSON.stringify(window.appState.schoolAccounts));
+            await cloudDeleteSchoolAccount(id);
 
-        function handleSaveAppSettings(e) {
+            // Delete tied students
+            const tiedStudents = window.appState.students.filter(s => s.schoolAccountId === id);
+            window.appState.students = window.appState.students.filter(s => s.schoolAccountId !== id);
+            localStorage.setItem('students', JSON.stringify(window.appState.students));
+            for (let s of tiedStudents) {
+                await cloudDeleteStudent(s.id);
+            }
+
+            window.renderSchoolAccountsList();
+            showToast("Akun dan Data Siswa Terkait Berhasil Dihapus", "info");
+        };
+
+        window.handleSaveAppSettings = function(e) {
             e.preventDefault();
-            const name = document.getElementById('settingAppName').value.trim();
-            const fileInput = document.getElementById('settingAppLogoInput');
+            const newName = document.getElementById('settingAppName').value.trim();
+            const logoFile = document.getElementById('settingAppLogoInput').files[0];
 
-            if (name) {
-                appState.appName = name;
-                localStorage.setItem('app_name', name);
-            }
+            if (newName) window.appState.appName = newName;
 
-            if (fileInput.files && fileInput.files[0]) {
+            if (logoFile) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    appState.appLogo = evt.target.result;
-                    localStorage.setItem('app_logo', evt.target.result);
-                    updateBrandingUI();
-                    showToast("Logo & Nama Aplikasi Berhasil Diperbarui");
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = async function(evt) {
+                    window.appState.appLogo = evt.target.result;
+                    localStorage.setItem('app_name', window.appState.appName);
+                    localStorage.setItem('app_logo', window.appState.appLogo);
+                    renderAppViews();
+                    showToast("Nama & Logo Aplikasi Berhasil Diperbarui!", "success");
+                }
+                reader.readAsDataURL(logoFile);
             } else {
-                updateBrandingUI();
-                showToast("Pengaturan Nama Aplikasi Berhasil Disimpan");
+                localStorage.setItem('app_name', window.appState.appName);
+                renderAppViews();
+                showToast("Nama Aplikasi Berhasil Diperbarui!", "success");
             }
-        }
+        };
 
-        function switchClassTab(tabName) {
+        // --- CLASS DASHBOARD & MULTI-TENANT SCOPED FUNCTIONS ---
+        window.switchClassTab = function(tab) {
             ['scan', 'students', 'recap', 'settings'].forEach(t => {
-                const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
-
-                if (t === tabName) {
-                    content.classList.remove('hidden');
+                const btn = document.getElementById('tabBtn' + capitalize(t));
+                const content = document.getElementById('tabContent' + capitalize(t));
+                if (t === tab) {
                     btn.className = "flex-1 py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition bg-brand-600 text-white shadow-md shadow-brand-500/20";
+                    content.classList.remove('hidden');
                 } else {
-                    content.classList.add('hidden');
                     btn.className = "flex-1 py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100";
+                    content.classList.add('hidden');
                 }
             });
 
-            if (tabName !== 'scan') {
-                stopCameraScanner();
+            if (tab === 'scan') {
+                window.startCameraScanner();
+            } else {
+                window.stopCameraScanner();
             }
+
+            if (tab === 'students') window.renderStudentList();
+            if (tab === 'recap') window.renderRecapList();
+        };
+
+        // Get students scoped ONLY to current logged-in school/class account
+        function getScopedStudents() {
+            if (!window.appState.currentClassAccount) return [];
+            return window.appState.students.filter(s => s.schoolAccountId === window.appState.currentClassAccount.id);
         }
 
-        function setScannerMode(mode) {
-            appState.activeScannerMode = mode;
+        // Get attendance records scoped ONLY to current logged-in school/class account students
+        function getScopedAttendance() {
+            const scopedStudents = getScopedStudents();
+            const scopedNisns = new Set(scopedStudents.map(s => s.nisn));
+            return window.appState.attendanceRecords.filter(r => scopedNisns.has(r.studentNisn));
+        }
+
+        // --- SCANNER ENGINE ---
+        window.setScannerMode = function(mode) {
+            window.appState.scannerMode = mode;
             const camBtn = document.getElementById('scannerModeCameraBtn');
             const hwBtn = document.getElementById('scannerModeHardwareBtn');
             const camBox = document.getElementById('cameraBox');
@@ -1075,642 +1192,666 @@
                 camBox.classList.remove('hidden');
                 camCtrls.classList.remove('hidden');
                 hwBox.classList.add('hidden');
+                window.startCameraScanner();
             } else {
                 hwBtn.className = "py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm";
                 camBtn.className = "py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800";
+                hwBox.classList.remove('hidden');
                 camBox.classList.add('hidden');
                 camCtrls.classList.add('hidden');
-                hwBox.classList.remove('hidden');
-                stopCameraScanner();
+                window.stopCameraScanner();
                 document.getElementById('hardwareScanInput').focus();
             }
-        }
+        };
 
-        function startCameraScanner() {
+        window.startCameraScanner = function() {
+            if (isCameraActive) return;
             document.getElementById('cameraOverlay').classList.add('hidden');
-            
-            if (!appState.html5QrCode) {
-                appState.html5QrCode = new Html5Qrcode("reader");
-            }
 
+            html5QrcodeScanner = new Html5Qrcode("reader");
             const config = { fps: 15, qrbox: { width: 220, height: 220 } };
 
-            appState.html5QrCode.start(
-                { facingMode: "environment" },
+            html5QrcodeScanner.start(
+                { facingMode: window.appState.activeCameraFacing },
                 config,
-                onScanSuccess
+                onScanSuccess,
+                onScanFailure
             ).then(() => {
-                appState.cameraActive = true;
-                document.getElementById('scanStatusIndicator').className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1.5";
-                document.getElementById('scanStatusText').innerText = "Kamera Aktif";
-                document.getElementById('toggleCamPowerText').innerText = "Matikan Kamera";
+                isCameraActive = true;
+                document.getElementById('scanStatusText').textContent = "Kamera Aktif";
+                document.getElementById('toggleCamPowerText').textContent = "Matikan Kamera";
             }).catch(err => {
-                showToast("Gagal mengakses kamera. Periksa izin perangkat.", "error");
+                console.warn("Camera start error:", err);
                 document.getElementById('cameraOverlay').classList.remove('hidden');
+                showToast("Gagal mengakses kamera. Izinkan akses browser.", "error");
             });
-        }
+        };
 
-        function stopCameraScanner() {
-            if (appState.html5QrCode && appState.cameraActive) {
-                appState.html5QrCode.stop().then(() => {
-                    appState.cameraActive = false;
-                    document.getElementById('scanStatusIndicator').className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 flex items-center gap-1.5";
-                    document.getElementById('scanStatusText').innerText = "Kamera Nonaktif";
-                    document.getElementById('toggleCamPowerText').innerText = "Aktifkan Kamera";
-                    document.getElementById('cameraOverlay').classList.remove('hidden');
-                }).catch(err => console.log(err));
+        window.stopCameraScanner = function() {
+            if (html5QrcodeScanner && isCameraActive) {
+                html5QrcodeScanner.stop().then(() => {
+                    html5QrcodeScanner.clear();
+                    isCameraActive = false;
+                    document.getElementById('scanStatusText').textContent = "Kamera Nonaktif";
+                    document.getElementById('toggleCamPowerText').textContent = "Nyalakan Kamera";
+                }).catch(err => console.warn(err));
             }
-        }
+        };
 
-        function toggleCameraPower() {
-            if (appState.cameraActive) {
-                stopCameraScanner();
+        window.toggleCameraPower = function() {
+            if (isCameraActive) {
+                window.stopCameraScanner();
+                document.getElementById('cameraOverlay').classList.remove('hidden');
             } else {
-                startCameraScanner();
+                window.startCameraScanner();
             }
+        };
+
+        window.switchCameraFacing = function() {
+            window.appState.activeCameraFacing = window.appState.activeCameraFacing === 'environment' ? 'user' : 'environment';
+            window.stopCameraScanner();
+            setTimeout(() => window.startCameraScanner(), 300);
+        };
+
+        function onScanSuccess(decodedText) {
+            processScanData(decodedText.trim());
         }
 
-        function switchCameraFacing() {
-            if (appState.cameraActive) {
-                stopCameraScanner();
-                setTimeout(() => {
-                    startCameraScanner();
-                }, 300);
-            }
+        function onScanFailure(error) {
+            // Quiet scan loop
         }
 
-        function playBeepSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.15);
-            } catch (e) {}
-        }
-
-        function onScanSuccess(qrData) {
-            playBeepSound();
-            processAttendanceData(qrData);
-        }
-
-        function setupHardwareScannerListener() {
+        // Handle Hardware Scanner Input
+        document.addEventListener('DOMContentLoaded', () => {
             const hwInput = document.getElementById('hardwareScanInput');
-            hwInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const code = hwInput.value.trim();
-                    if (code) {
-                        playBeepSound();
-                        processAttendanceData(code);
-                        hwInput.value = '';
+            if (hwInput) {
+                hwInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const val = this.value.trim();
+                        if (val) {
+                            processScanData(val);
+                            this.value = '';
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
 
-        function processAttendanceData(qrCodeValue) {
-            // Find student by NISN or QR code value
-            const student = appState.students.find(s => s.nisn === qrCodeValue || s.id === qrCodeValue);
+        // CORE ATTENDANCE LOGIC (Scoped to Current Class Account)
+        async function processScanData(nisnQuery) {
+            const scopedStudents = getScopedStudents();
+            const student = scopedStudents.find(s => s.nisn === nisnQuery || s.id === nisnQuery);
 
             if (!student) {
-                showToast("Data Siswa Tidak Ditemukan!", "error");
+                showToast(`Siswa dengan NISN ${nisnQuery} tidak terdaftar di kelas/sekolah ini!`, "error");
+                playAudioTone(false);
                 return;
             }
 
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0];
+            const todayStr = now.toISOString().split('T')[0];
             const timeStr = now.toTimeString().split(' ')[0].substring(0, 5); // HH:mm
 
-            // Determine check-in status (Tepat Waktu, Terlambat, Jam Pulang)
-            let type = 'in'; // 'in' or 'out'
-            let status = 'Tepat Waktu';
+            const inTimeLimit = window.appState.settings.inTime;
+            const lateTimeLimit = window.appState.settings.lateTime;
+            const outTimeLimit = window.appState.settings.outTime;
 
-            const inTimeLimit = appState.settings.inTime;
-            const lateTimeLimit = appState.settings.lateTime;
-            const outTimeLimit = appState.settings.outTime;
+            let scanType = "Masuk";
+            let statusBadge = "Tepat Waktu";
+            let badgeColorClass = "bg-emerald-100 text-emerald-700";
 
             if (timeStr >= outTimeLimit) {
-                type = 'out';
-                status = 'Jam Pulang';
+                scanType = "Pulang";
+                statusBadge = "Pulang";
+                badgeColorClass = "bg-indigo-100 text-indigo-700";
             } else if (timeStr > lateTimeLimit) {
-                type = 'in';
-                status = 'Terlambat';
-            } else {
-                type = 'in';
-                status = 'Tepat Waktu';
+                statusBadge = "Terlambat";
+                badgeColorClass = "bg-amber-100 text-amber-700";
             }
 
-            // CHECK ABSENT RULE: A student CANNOT scan twice for the same type (in/out) on the same date!
-            const existingLog = appState.attendanceRecords.find(r => 
-                r.studentNisn === student.nisn && 
-                r.date === dateStr && 
-                r.type === type
-            );
-
-            if (existingLog) {
-                showToast(`Siswa ${student.name} SUDAH melakukan presensi ${type === 'in' ? 'Masuk' : 'Pulang'} hari ini!`, "error");
-                return;
-            }
-
-            // Create log record
-            const newLog = {
-                id: 'log_' + Date.now(),
+            // Create Attendance Record
+            const record = {
+                id: `att_${student.nisn}_${Date.now()}`,
                 studentId: student.id,
-                studentName: student.name,
                 studentNisn: student.nisn,
-                studentClass: student.studentClass,
-                orderNo: student.orderNo || 999,
-                date: dateStr,
+                studentName: student.name,
+                studentClass: student.className,
+                schoolAccountId: window.appState.currentClassAccount.id,
+                date: todayStr,
                 time: timeStr,
-                type: type,
-                status: status
+                timestamp: now.toISOString(),
+                status: statusBadge,
+                scanType: scanType
             };
 
-            appState.attendanceRecords.push(newLog);
-            saveAttendanceRecords();
+            window.appState.attendanceRecords.unshift(record);
+            localStorage.setItem('attendance_records', JSON.stringify(window.appState.attendanceRecords));
+            await cloudSaveAttendance(record);
 
-            // Display Feedback Card
+            // Display Feedback UI
             document.getElementById('scanResultPlaceholder').classList.add('hidden');
             document.getElementById('scanResultDetail').classList.remove('hidden');
 
-            document.getElementById('scannedStudentName').innerText = student.name;
-            document.getElementById('scannedStudentNisn').innerText = `NISN: ${student.nisn}`;
-            document.getElementById('scannedStudentClass').innerText = `Kelas: ${student.studentClass}`;
-            document.getElementById('scannedTime').innerText = `${dateStr} ${timeStr} WIB`;
-            document.getElementById('scannedType').innerText = type === 'in' ? 'Presensi Masuk' : 'Presensi Pulang';
+            document.getElementById('scannedStudentPhoto').src = student.photo || "https://placehold.co/150x150/e2e8f0/475569?text=Foto";
+            document.getElementById('scannedStudentName').textContent = student.name;
+            document.getElementById('scannedStudentNisn').textContent = `NISN: ${student.nisn}`;
+            document.getElementById('scannedStudentClass').textContent = `Kelas: ${student.className}`;
+            document.getElementById('scannedTime').textContent = `${todayStr} • ${timeStr} WIB`;
+            document.getElementById('scannedType').textContent = scanType;
 
-            const badge = document.getElementById('scannedStatusBadge');
-            badge.innerText = status;
-            if (status === 'Tepat Waktu') {
-                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700";
-            } else if (status === 'Terlambat') {
-                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700";
-            } else {
-                badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700";
-            }
+            const badgeElem = document.getElementById('scannedStatusBadge');
+            badgeElem.textContent = statusBadge;
+            badgeElem.className = `px-2.5 py-0.5 rounded-full text-[10px] font-bold ${badgeColorClass}`;
 
-            const photoImg = document.getElementById('scannedStudentPhoto');
-            if (student.photo) {
-                photoImg.src = student.photo;
-            } else {
-                photoImg.src = "https://placehold.co/100x100/e2e8f0/64748b?text=Siswa";
-            }
+            playAudioTone(true);
+            showToast(`Presensi ${student.name} Berhasil Dicatat!`, "success");
 
-            updateTodaySummaryCounters();
-            renderRecapTable();
-            showToast(`Presensi ${status} Berhasil dicatat!`);
+            window.updateTodaySummary();
         }
 
-        function updateTodaySummaryCounters() {
+        window.updateTodaySummary = function() {
             const todayStr = new Date().toISOString().split('T')[0];
-            const todayLogs = appState.attendanceRecords.filter(r => r.date === todayStr);
+            const scopedRecords = getScopedAttendance().filter(r => r.date === todayStr);
 
-            const hadir = todayLogs.filter(r => r.type === 'in' && r.status === 'Tepat Waktu').length;
-            const terlambat = todayLogs.filter(r => r.type === 'in' && r.status === 'Terlambat').length;
-            const pulang = todayLogs.filter(r => r.type === 'out').length;
+            const hadir = scopedRecords.filter(r => r.status === "Tepat Waktu").length;
+            const terlambat = scopedRecords.filter(r => r.status === "Terlambat").length;
+            const pulang = scopedRecords.filter(r => r.scanType === "Pulang").length;
 
-            document.getElementById('todayHadirCount').innerText = hadir;
-            document.getElementById('todayTerlambatCount').innerText = terlambat;
-            document.getElementById('todayPulangCount').innerText = pulang;
+            document.getElementById('todayHadirCount').textContent = hadir;
+            document.getElementById('todayTerlambatCount').textContent = terlambat;
+            document.getElementById('todayPulangCount').textContent = pulang;
+        };
+
+        function playAudioTone(success) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (success) {
+                    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                } else {
+                    osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+                }
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            } catch (e) {}
         }
 
-        function renderStudentList() {
+        // --- STUDENT MANAGEMENT (SCOPED TO CURRENT CLASS) ---
+        window.renderStudentList = function() {
             const tbody = document.getElementById('studentTableBody');
             tbody.innerHTML = '';
 
-            const searchTerm = document.getElementById('searchStudentInput')?.value.toLowerCase() || '';
+            const scopedStudents = getScopedStudents();
+            const searchQuery = (document.getElementById('searchStudentInput')?.value || '').toLowerCase();
 
-            const filtered = appState.students.filter(s => 
-                s.name.toLowerCase().includes(searchTerm) || 
-                s.nisn.toLowerCase().includes(searchTerm)
+            const filtered = scopedStudents.filter(s => 
+                s.name.toLowerCase().includes(searchQuery) || 
+                s.nisn.toLowerCase().includes(searchQuery) ||
+                s.className.toLowerCase().includes(searchQuery)
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400 font-medium">Data siswa tidak ditemukan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">Belum ada siswa terdaftar di kelas/sekolah ini.</td></tr>`;
                 return;
             }
 
-            filtered.sort((a, b) => (a.orderNo || 0) - (b.orderNo || 0));
-
-            filtered.forEach((std) => {
+            filtered.forEach((st, idx) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 transition";
-                const imgUrl = std.photo ? std.photo : "https://placehold.co/100x100/e2e8f0/64748b?text=Foto";
-
+                tr.className = "hover:bg-slate-50/50 transition";
                 tr.innerHTML = `
-                    <td class="py-3 px-4 font-bold text-slate-500">${std.orderNo || '-'}</td>
+                    <td class="py-3 px-4 font-bold text-slate-500">${st.orderNo || (idx + 1)}</td>
                     <td class="py-3 px-4">
-                        <img src="${imgUrl}" class="w-8 h-8 rounded-full object-cover border border-slate-200" alt="Student">
+                        <img src="${st.photo || 'https://placehold.co/100/e2e8f0/475569?text=Siswa'}" class="w-8 h-8 rounded-full object-cover border border-slate-200">
                     </td>
-                    <td class="py-3 px-4 font-mono font-semibold text-slate-700">${std.nisn}</td>
-                    <td class="py-3 px-4 font-bold text-slate-800">${std.name}</td>
-                    <td class="py-3 px-4 font-bold text-slate-600">${std.gender}</td>
-                    <td class="py-3 px-4 text-slate-600">${std.studentClass}</td>
+                    <td class="py-3 px-4 font-mono font-bold text-slate-700">${st.nisn}</td>
+                    <td class="py-3 px-4 font-extrabold text-slate-800">${st.name}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-500">${st.gender || 'L'}</td>
+                    <td class="py-3 px-4 text-slate-600">${st.className}</td>
                     <td class="py-3 px-4 text-center">
-                        <button onclick="previewSingleCard('${std.id}')" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 rounded-lg text-[11px] font-bold">
-                            <i class="fa-solid fa-id-card mr-1"></i> Lihat Kartu KTP
+                        <button onclick="previewStudentCard('${st.id}')" class="px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-[11px] border border-brand-200">
+                            <i class="fa-solid fa-qrcode mr-1"></i> Cetak Kartu
                         </button>
                     </td>
-                    <td class="py-3 px-4 text-right space-x-2">
-                        <button onclick="editStudent('${std.id}')" class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteStudent('${std.id}')" class="p-1.5 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 font-bold"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="py-3 px-4 text-right space-x-1">
+                        <button onclick="editStudent('${st.id}')" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100"><i class="fa-solid fa-pen text-xs"></i></button>
+                        <button onclick="deleteStudent('${st.id}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"><i class="fa-solid fa-trash text-xs"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
-        function openAddStudentModal() {
-            document.getElementById('studentEditId').value = '';
-            document.getElementById('studentNisnInput').value = '';
-            document.getElementById('studentNameInput').value = '';
-            document.getElementById('studentGenderInput').value = 'L';
-            document.getElementById('studentClassInput').value = '';
-            document.getElementById('studentModalTitle').innerText = 'Tambah Data Siswa Baru';
+        window.openAddStudentModal = function() {
+            document.getElementById('studentModalTitle').textContent = "Tambah Siswa Manual";
+            document.getElementById('studentEditId').value = "";
+            document.getElementById('studentNisnInput').value = "";
+            document.getElementById('studentNameInput').value = "";
+            document.getElementById('studentGenderInput').value = "L";
+            document.getElementById('studentClassInput').value = window.appState.currentClassAccount ? window.appState.currentClassAccount.name : "";
             document.getElementById('studentModal').classList.remove('hidden');
-        }
+        };
 
-        function closeStudentModal() {
+        window.closeStudentModal = function() {
             document.getElementById('studentModal').classList.add('hidden');
-        }
+        };
 
-        function handleSaveStudent(e) {
+        window.handleSaveStudent = async function(e) {
             e.preventDefault();
-            const id = document.getElementById('studentEditId').value;
+            const id = document.getElementById('studentEditId').value || 'st_' + Date.now();
             const nisn = document.getElementById('studentNisnInput').value.trim();
             const name = document.getElementById('studentNameInput').value.trim();
             const gender = document.getElementById('studentGenderInput').value;
-            const studentClass = document.getElementById('studentClassInput').value.trim();
-            const photoInput = document.getElementById('studentPhotoInput');
+            const className = document.getElementById('studentClassInput').value.trim();
+            const photoFile = document.getElementById('studentPhotoInput').files[0];
 
-            const orderNo = id ? (appState.students.find(s => s.id === id)?.orderNo || appState.students.length + 1) : appState.students.length + 1;
+            const schoolAccountId = window.appState.currentClassAccount.id;
 
-            const saveObj = (photoData) => {
-                if (id) {
-                    const idx = appState.students.findIndex(s => s.id === id);
-                    if (idx !== -1) {
-                        appState.students[idx] = {
-                            id, nisn, name, gender, studentClass, orderNo,
-                            photo: photoData !== null ? photoData : appState.students[idx].photo
-                        };
-                    }
+            const saveStudentObj = async (photoUrl) => {
+                const studentData = {
+                    id,
+                    schoolAccountId,
+                    nisn,
+                    name,
+                    gender,
+                    className,
+                    photo: photoUrl || "https://placehold.co/150x150/e2e8f0/475569?text=Foto",
+                    orderNo: window.appState.students.filter(s => s.schoolAccountId === schoolAccountId).length + 1
+                };
+
+                const existingIdx = window.appState.students.findIndex(s => s.id === id);
+                if (existingIdx > -1) {
+                    window.appState.students[existingIdx] = studentData;
                 } else {
-                    appState.students.push({
-                        id: 'std_' + Date.now(),
-                        nisn, name, gender, studentClass, orderNo,
-                        photo: photoData || ''
-                    });
+                    window.appState.students.push(studentData);
                 }
 
-                saveStudents();
-                renderStudentList();
-                closeStudentModal();
-                showToast("Data Siswa Berhasil Disimpan");
+                localStorage.setItem('students', JSON.stringify(window.appState.students));
+                await cloudSaveStudent(studentData);
+
+                window.closeStudentModal();
+                window.renderStudentList();
+                showToast("Data Siswa Berhasil Disimpan!", "success");
             };
 
-            if (photoInput.files && photoInput.files[0]) {
+            if (photoFile) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    saveObj(evt.target.result);
-                };
-                reader.readAsDataURL(photoInput.files[0]);
+                reader.onload = function(evt) { saveStudentObj(evt.target.result); };
+                reader.readAsDataURL(photoFile);
             } else {
-                saveObj(null);
+                const existing = window.appState.students.find(s => s.id === id);
+                saveStudentObj(existing ? existing.photo : null);
             }
-        }
+        };
 
-        function editStudent(id) {
-            const std = appState.students.find(s => s.id === id);
-            if (!std) return;
-
-            document.getElementById('studentEditId').value = std.id;
-            document.getElementById('studentNisnInput').value = std.nisn;
-            document.getElementById('studentNameInput').value = std.name;
-            document.getElementById('studentGenderInput').value = std.gender;
-            document.getElementById('studentClassInput').value = std.studentClass;
-            document.getElementById('studentModalTitle').innerText = 'Edit Data Siswa';
+        window.editStudent = function(id) {
+            const st = window.appState.students.find(s => s.id === id);
+            if (!st) return;
+            document.getElementById('studentModalTitle').textContent = "Edit Data Siswa";
+            document.getElementById('studentEditId').value = st.id;
+            document.getElementById('studentNisnInput').value = st.nisn;
+            document.getElementById('studentNameInput').value = st.name;
+            document.getElementById('studentGenderInput').value = st.gender || 'L';
+            document.getElementById('studentClassInput').value = st.className;
             document.getElementById('studentModal').classList.remove('hidden');
-        }
+        };
 
-        function deleteStudent(id) {
-            appState.students = appState.students.filter(s => s.id !== id);
-            saveStudents();
-            renderStudentList();
-            showToast("Siswa Berhasil Dihapus");
-        }
+        window.deleteStudent = async function(id) {
+            if (!confirm("Apakah anda yakin ingin menghapus data siswa ini?")) return;
+            window.appState.students = window.appState.students.filter(s => s.id !== id);
+            localStorage.setItem('students', JSON.stringify(window.appState.students));
+            await cloudDeleteStudent(id);
 
-        function downloadExcelTemplate() {
+            window.renderStudentList();
+            showToast("Siswa Berhasil Dihapus", "info");
+        };
+
+        // --- EXCEL TEMPLATE & IMPORT (Scoped to current class account) ---
+        window.downloadExcelTemplate = function() {
             const templateData = [
-                { "No Urut": 1, "NISN": "0012345678", "Nama Lengkap": "Ahmad Dani", "Jenis Kelamin (L/P)": "L", "Kelas": "X IPA 1" },
-                { "No Urut": 2, "NISN": "0087654321", "Nama Lengkap": "Bunga Citra", "Jenis Kelamin (L/P)": "P", "Kelas": "X IPA 1" }
+                { "No": 1, "NISN": "0012345678", "Nama Lengkap": "Budi Santoso", "L/P": "L", "Kelas": window.appState.currentClassAccount ? window.appState.currentClassAccount.name : "X IPA 1" },
+                { "No": 2, "NISN": "0012345679", "Nama Lengkap": "Siti Aminah", "L/P": "P", "Kelas": window.appState.currentClassAccount ? window.appState.currentClassAccount.name : "X IPA 1" }
             ];
-
             const ws = XLSX.utils.json_to_sheet(templateData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Template Siswa");
-            XLSX.writeFile(wb, "Template_Import_Siswa_EAbsensi.xlsx");
-        }
+            XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
+        };
 
-        function handleExcelImport(event) {
-            const file = event.target.files[0];
+        window.handleExcelImport = function(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
+            reader.onload = async function(evt) {
+                const data = new Uint8Array(evt.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
                 const json = XLSX.utils.sheet_to_json(worksheet);
 
-                if (json && json.length > 0) {
-                    json.forEach((row, idx) => {
-                        const nisn = String(row["NISN"] || row["nisn"] || "").trim();
-                        const name = String(row["Nama Lengkap"] || row["Nama"] || "").trim();
-                        const gender = String(row["Jenis Kelamin (L/P)"] || row["JK"] || "L").trim().toUpperCase();
-                        const studentClass = String(row["Kelas"] || row["kelas"] || "Umum").trim();
-                        const orderNo = parseInt(row["No Urut"] || idx + 1);
-
-                        if (nisn && name) {
-                            // Check if NISN exists
-                            const existingIdx = appState.students.findIndex(s => s.nisn === nisn);
-                            if (existingIdx !== -1) {
-                                appState.students[existingIdx] = { ...appState.students[existingIdx], name, gender, studentClass, orderNo };
-                            } else {
-                                appState.students.push({
-                                    id: 'std_' + Date.now() + '_' + idx,
-                                    nisn, name, gender, studentClass, orderNo, photo: ''
-                                });
-                            }
-                        }
-                    });
-
-                    saveStudents();
-                    renderStudentList();
-                    showToast(`Berhasil Mengimport ${json.length} Data Siswa`);
-                } else {
-                    showToast("File Excel Kosong atau Format Tidak Sesuai", "error");
+                if (json.length === 0) {
+                    showToast("File Excel Kosong atau format tidak valid!", "error");
+                    return;
                 }
+
+                const schoolAccountId = window.appState.currentClassAccount.id;
+                let addedCount = 0;
+
+                for (let i = 0; i < json.length; i++) {
+                    const row = json[i];
+                    const nisn = String(row['NISN'] || row['nisn'] || '').trim();
+                    const name = String(row['Nama Lengkap'] || row['Nama'] || row['nama'] || '').trim();
+                    const gender = String(row['L/P'] || row['Jenis Kelamin'] || 'L').trim().toUpperCase();
+                    const className = String(row['Kelas'] || row['kelas'] || window.appState.currentClassAccount.name).trim();
+
+                    if (nisn && name) {
+                        const stObj = {
+                            id: `st_${nisn}_${Date.now()}_${i}`,
+                            schoolAccountId,
+                            nisn,
+                            name,
+                            gender,
+                            className,
+                            photo: "https://placehold.co/150x150/e2e8f0/475569?text=Foto",
+                            orderNo: Number(row['No']) || (i + 1)
+                        };
+
+                        // Remove existing if matching NISN in this school account
+                        window.appState.students = window.appState.students.filter(s => !(s.schoolAccountId === schoolAccountId && s.nisn === nisn));
+                        window.appState.students.push(stObj);
+                        await cloudSaveStudent(stObj);
+                        addedCount++;
+                    }
+                }
+
+                localStorage.setItem('students', JSON.stringify(window.appState.students));
+                window.renderStudentList();
+                showToast(`Berhasil Mengimpor ${addedCount} Data Siswa!`, "success");
             };
             reader.readAsArrayBuffer(file);
-        }
+        };
 
-        function createCardElementHTML(student) {
-            const qrContainerId = `qr_${student.id}_${Math.random().toString(36).substring(7)}`;
-            const imgUrl = student.photo ? student.photo : "https://placehold.co/100x100/e2e8f0/64748b?text=Foto";
-
-            setTimeout(() => {
-                const el = document.getElementById(qrContainerId);
-                if (el) {
-                    el.innerHTML = '';
-                    new QRCode(el, {
-                        text: student.nisn,
-                        width: 70,
-                        height: 70,
-                        colorDark: "#0f172a",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                }
-            }, 100);
-
-            return `
-                <div class="ktp-card bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-3 text-white shadow-lg border border-slate-700 flex flex-col justify-between relative overflow-hidden shrink-0">
-                    <!-- Top Bar Header -->
-                    <div class="flex items-center justify-between border-b border-slate-700/80 pb-1.5">
-                        <div class="flex items-center space-x-1.5">
-                            <i class="fa-solid fa-graduation-cap text-indigo-400 text-xs"></i>
-                            <span class="font-bold text-[10px] tracking-wider uppercase text-slate-200">${appState.appName}</span>
-                        </div>
-                        <span class="text-[9px] font-extrabold text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full border border-indigo-500/30">KARTU ABSENSI DIGITAL</span>
-                    </div>
-
-                    <!-- Body Content (Photo, Details & QR Code) -->
-                    <div class="grid grid-cols-12 gap-2 items-center my-auto">
-                        <!-- Student Photo -->
-                        <div class="col-span-3 flex justify-center">
-                            <div class="w-14 h-18 bg-slate-800 rounded-md border border-slate-600 overflow-hidden shadow-inner">
-                                <img src="${imgUrl}" class="w-full h-full object-cover" alt="Student">
-                            </div>
-                        </div>
-
-                        <!-- Details -->
-                        <div class="col-span-6 space-y-0.5">
-                            <div class="leading-none">
-                                <span class="text-[8px] text-slate-400 uppercase block font-semibold">Nama Lengkap</span>
-                                <h4 class="font-extrabold text-[11px] text-white truncate">${student.name}</h4>
-                            </div>
-                            <div class="leading-none">
-                                <span class="text-[8px] text-slate-400 uppercase block font-semibold">NISN / NIS</span>
-                                <p class="font-mono font-bold text-[10px] text-indigo-300">${student.nisn}</p>
-                            </div>
-                            <div class="flex items-center gap-2 text-[9px] text-slate-300 font-medium">
-                                <span>Kelas: <b>${student.studentClass}</b></span>
-                                <span>JK: <b>${student.gender}</b></span>
-                            </div>
-                        </div>
-
-                        <!-- QR Code Container -->
-                        <div class="col-span-3 flex flex-col items-center justify-center">
-                            <div id="${qrContainerId}" class="bg-white p-1 rounded-md shadow-md border border-slate-200"></div>
-                            <span class="text-[7px] font-bold text-slate-400 mt-1">SCAN DISINI</span>
-                        </div>
-                    </div>
-
-                    <!-- Footer Bar -->
-                    <div class="border-t border-slate-800 pt-1 flex justify-between items-center text-[8px] text-slate-400">
-                        <span>No. Urut: ${student.orderNo || '-'}</span>
-                        <span class="text-indigo-400 font-semibold">Sistem Absensi Presisi</span>
-                    </div>
-                </div>
-            `;
-        }
-
-        function previewSingleCard(studentId) {
-            const student = appState.students.find(s => s.id === studentId);
+        // --- KTP ID CARD GENERATION & PDF EXPORT ---
+        window.previewStudentCard = function(studentId) {
+            const student = window.appState.students.find(s => s.id === studentId);
             if (!student) return;
 
             const printArea = document.getElementById('cardPrintArea');
-            printArea.innerHTML = createCardElementHTML(student);
-            document.getElementById('cardPreviewModal').classList.remove('hidden');
-        }
+            printArea.innerHTML = '';
+            
+            const cardMarkup = renderKtpCardElement(student);
+            printArea.appendChild(cardMarkup);
 
-        function downloadAllCardsPDF() {
-            if (appState.students.length === 0) {
+            // Generate QR Code inside card
+            new QRCode(cardMarkup.querySelector(`#qr_${student.id}`), {
+                text: student.nisn,
+                width: 70,
+                height: 70,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('cardPreviewModal').classList.remove('hidden');
+        };
+
+        window.downloadAllCardsPDF = function() {
+            const scopedStudents = getScopedStudents();
+            if (scopedStudents.length === 0) {
                 showToast("Tidak ada data siswa untuk dicetak!", "error");
                 return;
             }
 
             const printArea = document.getElementById('cardPrintArea');
             printArea.innerHTML = '';
-            
-            appState.students.forEach(std => {
-                printArea.innerHTML += createCardElementHTML(std);
+
+            scopedStudents.forEach((student) => {
+                const cardMarkup = renderKtpCardElement(student);
+                printArea.appendChild(cardMarkup);
+                new QRCode(cardMarkup.querySelector(`#qr_${student.id}`), {
+                    text: student.nisn,
+                    width: 70,
+                    height: 70,
+                    colorDark : "#0f172a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
             });
 
             document.getElementById('cardPreviewModal').classList.remove('hidden');
+        };
+
+        function renderKtpCardElement(student) {
+            const wrapper = document.createElement('div');
+            wrapper.className = "ktp-card bg-gradient-to-br from-indigo-900 via-slate-900 to-brand-900 rounded-2xl p-3.5 text-white shadow-xl relative overflow-hidden flex flex-col justify-between border border-indigo-500/30 shrink-0";
+            wrapper.innerHTML = `
+                <!-- Background Pattern -->
+                <div class="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-brand-500/10 blur-xl pointer-events-none"></div>
+
+                <!-- Header -->
+                <div class="flex items-center justify-between pb-2 border-b border-white/10">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-graduation-cap text-amber-400 text-sm"></i>
+                        <div>
+                            <p class="text-[9px] font-black uppercase tracking-wider text-indigo-300">KARTU PRESENSI DIGITAL</p>
+                            <p class="text-[8px] text-slate-300 font-medium">${window.appState.currentClassAccount ? window.appState.currentClassAccount.name : 'SEKOLAH'}</p>
+                        </div>
+                    </div>
+                    <span class="text-[8px] font-mono font-bold bg-white/10 px-2 py-0.5 rounded-full border border-white/10">KTP-PRESENSI</span>
+                </div>
+
+                <!-- Body -->
+                <div class="flex items-center space-x-3 my-1">
+                    <img src="${student.photo || 'https://placehold.co/150/e2e8f0/475569?text=Foto'}" class="w-16 h-20 rounded-xl object-cover border-2 border-white/20 shadow-md">
+                    <div class="flex-1 space-y-1">
+                        <div>
+                            <p class="text-[8px] text-indigo-300 uppercase font-semibold">Nama Lengkap</p>
+                            <p class="text-xs font-black leading-tight text-white uppercase">${student.name}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1">
+                            <div>
+                                <p class="text-[7px] text-indigo-300 uppercase font-semibold">NISN/NIS</p>
+                                <p class="text-[10px] font-mono font-bold text-amber-300">${student.nisn}</p>
+                            </div>
+                            <div>
+                                <p class="text-[7px] text-indigo-300 uppercase font-semibold">Kelas</p>
+                                <p class="text-[10px] font-bold text-slate-200">${student.className}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- QR Box -->
+                    <div class="bg-white p-1 rounded-xl shadow-md shrink-0">
+                        <div id="qr_${student.id}"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[7px] text-slate-400">
+                    <span>Valid Digital ID • QR Code Presensi</span>
+                    <span class="font-bold text-amber-400/80">E-ABSENSI DIGITAL</span>
+                </div>
+            `;
+            return wrapper;
         }
 
-        function downloadCardPDFFromModal() {
-            const element = document.getElementById('cardPrintArea');
-            showToast("Menyiapkan file PDF kartu...");
+        window.closeCardPreviewModal = function() {
+            document.getElementById('cardPreviewModal').classList.add('hidden');
+        };
 
+        window.downloadCardPDFFromModal = function() {
+            const element = document.getElementById('cardPrintArea');
             const opt = {
-                margin:       [10, 10, 10, 10],
-                filename:     `Kartu_Absensi_Siswa_${Date.now()}.pdf`,
+                margin:       5,
+                filename:     `Kartu_Presensi_${window.appState.currentClassAccount ? window.appState.currentClassAccount.name : 'Siswa'}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 3, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
+            html2pdf().set(opt).from(element).save();
+        };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                showToast("File PDF Kartu Berhasil Diunduh!");
-            });
-        }
-
-        function closeCardPreviewModal() {
-            document.getElementById('cardPreviewModal').classList.add('hidden');
-        }
-
-        function setRecapFilter(filter) {
-            appState.recapFilter = filter;
+        // --- RECAP & SPREADSHEET (SCOPED TO CURRENT CLASS) ---
+        window.setRecapFilter = function(filter) {
+            window.appState.recapFilter = filter;
             ['daily', 'weekly', 'monthly'].forEach(f => {
-                const btn = document.getElementById(`recapFilter${f.charAt(0).toUpperCase() + f.slice(1)}`);
+                const btn = document.getElementById('recapFilter' + capitalize(f));
                 if (f === filter) {
                     btn.className = "px-3 py-1.5 rounded-xl font-bold text-xs transition bg-white text-brand-600 shadow-sm";
                 } else {
                     btn.className = "px-3 py-1.5 rounded-xl font-bold text-xs transition text-slate-600 hover:bg-white";
                 }
             });
+            window.renderRecapList();
+        };
 
-            const textMap = { daily: 'Hari Ini', weekly: 'Minggu Ini', monthly: 'Bulan Ini' };
-            document.getElementById('recapPeriodText').innerText = `Periode: ${textMap[filter]}`;
-            renderRecapTable();
-        }
-
-        function renderRecapTable() {
+        window.renderRecapList = function() {
             const tbody = document.getElementById('recapTableBody');
             tbody.innerHTML = '';
 
-            const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
+            const scopedAttendance = getScopedAttendance();
+            const scopedStudents = getScopedStudents();
 
-            let filteredLogs = appState.attendanceRecords;
+            let statOnTime = 0, statLate = 0, statOut = 0;
 
-            if (appState.recapFilter === 'daily') {
-                filteredLogs = filteredLogs.filter(r => r.date === todayStr);
-            } else if (appState.recapFilter === 'weekly') {
-                const sevenDaysAgo = new Date();
-                sevenDaysAgo.setDate(now.getDate() - 7);
-                filteredLogs = filteredLogs.filter(r => new Date(r.date) >= sevenDaysAgo);
-            } else if (appState.recapFilter === 'monthly') {
-                const curMonth = todayStr.substring(0, 7);
-                filteredLogs = filteredLogs.filter(r => r.date.startsWith(curMonth));
-            }
+            scopedAttendance.forEach(r => {
+                if (r.status === "Tepat Waktu") statOnTime++;
+                if (r.status === "Terlambat") statLate++;
+                if (r.scanType === "Pulang") statOut++;
+            });
 
-            // Stats counts
-            const onTimeCount = filteredLogs.filter(r => r.type === 'in' && r.status === 'Tepat Waktu').length;
-            const lateCount = filteredLogs.filter(r => r.type === 'in' && r.status === 'Terlambat').length;
-            const outCount = filteredLogs.filter(r => r.type === 'out').length;
-            
-            // Total absent calculation
-            const totalStudents = appState.students.length;
-            const uniquePresent = new Set(filteredLogs.filter(r => r.type === 'in').map(r => r.studentNisn)).size;
-            const absentCount = Math.max(0, totalStudents - uniquePresent);
+            document.getElementById('recapStatOnTime').textContent = statOnTime;
+            document.getElementById('recapStatLate').textContent = statLate;
+            document.getElementById('recapStatOut').textContent = statOut;
+            document.getElementById('recapStatAbsent').textContent = Math.max(0, scopedStudents.length - (statOnTime + statLate));
 
-            document.getElementById('recapStatOnTime').innerText = onTimeCount;
-            document.getElementById('recapStatLate').innerText = lateCount;
-            document.getElementById('recapStatOut').innerText = outCount;
-            document.getElementById('recapStatAbsent').innerText = absentCount;
-
-            if (filteredLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400 font-medium">Belum ada data presensi pada periode ini.</td></tr>`;
+            if (scopedAttendance.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">Belum ada rekap presensi recorded.</td></tr>`;
                 return;
             }
 
-            // Sort by Order No (Import sequence)
-            filteredLogs.sort((a, b) => (a.orderNo || 0) - (b.orderNo || 0));
-
-            filteredLogs.forEach((log) => {
+            scopedAttendance.forEach((rec, idx) => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/80 transition";
-
-                let statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">Tepat Waktu</span>`;
-                if (log.status === 'Terlambat') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">Terlambat</span>`;
-                } else if (log.status === 'Jam Pulang') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700">Pulang</span>`;
-                }
-
+                tr.className = "hover:bg-slate-50/50 transition";
                 tr.innerHTML = `
-                    <td class="py-3 px-4 font-bold text-slate-500">${log.orderNo || '-'}</td>
-                    <td class="py-3 px-4 font-mono font-semibold text-slate-700">${log.studentNisn}</td>
-                    <td class="py-3 px-4 font-bold text-slate-800">${log.studentName}</td>
-                    <td class="py-3 px-4 text-slate-600">${log.studentClass}</td>
-                    <td class="py-3 px-4 font-mono text-slate-600">${log.date} ${log.time}</td>
-                    <td class="py-3 px-4">${statusBadge}</td>
-                    <td class="py-3 px-4 text-right font-bold text-slate-700">${log.type === 'in' ? 'Masuk' : 'Pulang'}</td>
+                    <td class="py-3 px-4 font-bold text-slate-500">${idx + 1}</td>
+                    <td class="py-3 px-4 font-mono font-bold text-slate-700">${rec.studentNisn}</td>
+                    <td class="py-3 px-4 font-extrabold text-slate-800">${rec.studentName}</td>
+                    <td class="py-3 px-4 text-slate-600">${rec.studentClass}</td>
+                    <td class="py-3 px-4 text-slate-500">${rec.date} • ${rec.time}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${rec.status === 'Terlambat' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${rec.status}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right font-bold text-indigo-600">${rec.scanType}</td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
+        };
 
-        function exportRecapToExcel() {
-            if (appState.attendanceRecords.length === 0) {
-                showToast("Tidak ada data presensi untuk di-export!", "error");
+        window.exportRecapToExcel = function() {
+            const scopedAttendance = getScopedAttendance();
+            if (scopedAttendance.length === 0) {
+                showToast("Tidak ada data rekap untuk diexport!", "error");
                 return;
             }
 
-            const exportData = appState.attendanceRecords.map(r => ({
-                "No Urut": r.orderNo || 999,
+            const exportData = scopedAttendance.map((r, i) => ({
+                "No": i + 1,
                 "NISN": r.studentNisn,
                 "Nama Siswa": r.studentName,
                 "Kelas": r.studentClass,
                 "Tanggal": r.date,
-                "Jam Scan": r.time,
-                "Tipe Absensi": r.type === 'in' ? 'Masuk' : 'Pulang',
-                "Status Presensi": r.status
+                "Jam": r.time,
+                "Status": r.status,
+                "Jenis Scan": r.scanType
             }));
 
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Rekap Presensi");
-            XLSX.writeFile(wb, `Rekap_Presensi_Siswa_${Date.now()}.xlsx`);
-            showToast("Rekapitulasi Berhasil Di-export ke Excel");
-        }
+            XLSX.writeFile(wb, `Rekap_Presensi_${window.appState.currentClassAccount ? window.appState.currentClassAccount.name : 'Kelas'}.xlsx`);
+        };
 
-        function openSpreadsheetLink() {
-            const url = appState.settings.spreadsheetLink;
-            if (url && url.startsWith("http")) {
-                window.open(url, '_blank');
+        window.openSpreadsheetLink = function() {
+            const link = window.appState.settings.spreadsheetLink;
+            if (link) {
+                window.open(link, '_blank');
             } else {
-                showToast("Link Google Spreadsheet belum dikonfigurasi di Pengaturan!", "error");
+                showToast("Tautan Spreadsheet belum dikonfigurasi di pengaturan!", "error");
             }
-        }
+        };
 
-        function handleSaveScheduleSettings(e) {
+        // --- SETTINGS FORM HANDLERS ---
+        window.loadSettingsToForm = function() {
+            const st = window.appState.settings;
+            if (document.getElementById('settingInTime')) document.getElementById('settingInTime').value = st.inTime || "07:00";
+            if (document.getElementById('settingLateTime')) document.getElementById('settingLateTime').value = st.lateTime || "07:15";
+            if (document.getElementById('settingOutTime')) document.getElementById('settingOutTime').value = st.outTime || "14:00";
+            if (document.getElementById('settingSpreadsheetLink')) document.getElementById('settingSpreadsheetLink').value = st.spreadsheetLink || "";
+            if (document.getElementById('settingExternalScannerToggle')) document.getElementById('settingExternalScannerToggle').checked = !!st.externalScanner;
+        };
+
+        window.handleSaveScheduleSettings = async function(e) {
             e.preventDefault();
-            appState.settings.inTime = document.getElementById('settingInTime').value;
-            appState.settings.lateTime = document.getElementById('settingLateTime').value;
-            appState.settings.outTime = document.getElementById('settingOutTime').value;
+            window.appState.settings.inTime = document.getElementById('settingInTime').value;
+            window.appState.settings.lateTime = document.getElementById('settingLateTime').value;
+            window.appState.settings.outTime = document.getElementById('settingOutTime').value;
 
-            saveSettings();
-            showToast("Pengaturan Jam Absensi Berhasil Disimpan");
-        }
+            localStorage.setItem('app_settings', JSON.stringify(window.appState.settings));
+            await cloudSaveSettings(window.appState.settings);
+            showToast("Pengaturan Jam Masuk & Pulang Berhasil Disimpan!", "success");
+        };
 
-        function handleSaveExtraSettings(e) {
+        window.handleSaveExtraSettings = async function(e) {
             e.preventDefault();
-            appState.settings.spreadsheetLink = document.getElementById('settingSpreadsheetLink').value.trim();
-            appState.settings.externalScanner = document.getElementById('settingExternalScannerToggle').checked;
+            window.appState.settings.spreadsheetLink = document.getElementById('settingSpreadsheetLink').value.trim();
+            window.appState.settings.externalScanner = document.getElementById('settingExternalScannerToggle').checked;
 
-            saveSettings();
-            showToast("Pengaturan Koneksi & Spreadsheet Disimpan");
+            localStorage.setItem('app_settings', JSON.stringify(window.appState.settings));
+            await cloudSaveSettings(window.appState.settings);
+            showToast("Pengaturan Koneksi & Scanner Berhasil Disimpan!", "success");
+        };
+
+        // Utility Helper Toast Notification
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('toast');
+            const content = document.getElementById('toastContent');
+            const icon = document.getElementById('toastIcon');
+            const message = document.getElementById('toastMessage');
+
+            message.textContent = msg;
+
+            if (type === 'success') {
+                icon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+            } else if (type === 'error') {
+                icon.className = "fa-solid fa-triangle-exclamation text-rose-400 text-base";
+            } else {
+                icon.className = "fa-solid fa-circle-info text-sky-400 text-base";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
         }
+
+        function capitalize(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        // Initialize App on Page Load
+        window.addEventListener('load', async () => {
+            await initCloudSync();
+            renderAppViews();
+        });
     </script>
 </body>
 </html>
