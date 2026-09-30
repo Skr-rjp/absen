@@ -758,14 +758,26 @@
 
         // Firebase Configuration & Initialization
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-tka-cbt-app';
-const firebaseConfig = {
-  apiKey: "AIzaSyAa0LYyNunA-a3oniqYD7hgr0wBaQ2oQqk",
-  authDomain: "sekolah-90d18.firebaseapp.com",
-  projectId: "sekolah-90d18",
-  storageBucket: "sekolah-90d18.firebasestorage.app",
-  messagingSenderId: "574602918966",
-  appId: "1:574602918966:web:9a24fd5bf6e7f457e66c97"
-};
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3pybwqoPWJ7jzVhlmww1S_HQSoKfHl_Y",
+    authDomain: "aplikasi-tka.firebaseapp.com",
+    databaseURL: "https://aplikasi-tka-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "aplikasi-tka",
+    storageBucket: "aplikasi-tka.firebasestorage.app",
+    messagingSenderId: "885175039705",
+    appId: "1:885175039705:web:31e7b345d9407ef495b0c8"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
