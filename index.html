@@ -758,18 +758,18 @@
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Secret password for admin access
-        const ADMIN_SECRET_PASS = "050393";
+        const ADMIN_SECRET_PASS = "ISTARATAS";
 
         // Initialize Firebase
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'e-absensi-default-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDemoKeyHere",
-            authDomain: "e-absensi.firebaseapp.com",
-            projectId: "e-absensi-app",
-            storageBucket: "e-absensi.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
-        };
+       const firebaseConfig = {
+  apiKey: "AIzaSyAOxLKx8SbjgD0CxHJ6LCYvhSIxqBNRGhU",
+  authDomain: "asesmen-bca7b.firebaseapp.com",
+  projectId: "asesmen-bca7b",
+  storageBucket: "asesmen-bca7b.firebasestorage.app",
+  messagingSenderId: "20907917727",
+  appId: "1:20907917727:web:41907896626c4108fabdaa"
+};
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
